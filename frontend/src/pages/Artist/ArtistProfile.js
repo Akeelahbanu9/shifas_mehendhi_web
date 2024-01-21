@@ -18,6 +18,7 @@ function ArtistProfile() {
   const onFinish = async (values) => {
     try {
       dispatch(showLoading());
+  
       const response = await axios.post(
         "/api/v2/artist/update-artist-profile",
         {
@@ -34,7 +35,9 @@ function ArtistProfile() {
           },
         }
       );
+  
       dispatch(hideLoading());
+  
       if (response.data.success) {
         toast.success(response.data.message);
         navigate("/");
@@ -43,9 +46,25 @@ function ArtistProfile() {
       }
     } catch (error) {
       dispatch(hideLoading());
-      toast.error("Something went wrong");
+  
+      // Handle specific error cases if needed
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        toast.error(`Server Error: ${error.response.status}`);
+      } else if (error.request) {
+        // The request was made but no response was received
+        toast.error("No response received from the server");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        toast.error("An error occurred while processing the request");
+      }
+  
+      // Log the error for further investigation
+      console.error("API Request Error:", error);
     }
   };
+  
 
   const getArtistData = async () => {
     try {
@@ -76,11 +95,11 @@ function ArtistProfile() {
     getArtistData();
   }, []);
   return (
-    <Layout>
+    <div>
       <h1 className="page-title">Artist Profile</h1>
       <hr />
       {artist && <ArtistForm onFinish={onFinish} initivalValues={artist} />}
-    </Layout>
+    </div>
   );
 }
 

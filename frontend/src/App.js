@@ -180,14 +180,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-     <Route
-          path="/shop/artistlist"
-          element={
-            <ProtectedRoute>
-              <ArtistsList />
-            </ProtectedRoute>
-          }
-        />
+
         <Route
           path="/artist/profile/:userId"
           element={
@@ -334,6 +327,17 @@ const App = () => {
             </SellerProtectedRoute>
           }
         />
+
+         <Route
+          path="/shop/Artistslist"
+          element={
+            <SellerProtectedRoute>
+              <ArtistsList />
+            </ SellerProtectedRoute>
+          }
+        />
+
+        
         {/* Admin Routes */}
         <Route
           path="/admin/dashboard"

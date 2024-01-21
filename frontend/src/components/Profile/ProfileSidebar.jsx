@@ -23,7 +23,7 @@ const ProfileSidebar = ({ setActive, active }) => {
       .get(`${server}/user/logout`, { withCredentials: true })
       .then((res) => {
         toast.success(res.data.message);
-        window.location.reload(true);
+         window.location.reload(true);
         navigate("/login");
       })
       .catch((error) => {
@@ -130,7 +130,7 @@ const ProfileSidebar = ({ setActive, active }) => {
           Address
         </span>
       </div>
-      <Link to="/Appointments">
+     
       <div
         className="flex items-center cursor-pointer w-full mb-8"
         onClick={() => setActive(8)}
@@ -143,7 +143,7 @@ const ProfileSidebar = ({ setActive, active }) => {
         >
           Appointments
         </span>
-      </div> </Link>
+      </div> 
 
       
       <div
@@ -159,11 +159,6 @@ const ProfileSidebar = ({ setActive, active }) => {
           Apply to become an artist
         </span>
       </div>
-
-
-
-
-
 
 
 

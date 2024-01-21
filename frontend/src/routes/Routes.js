@@ -37,5 +37,6 @@ export {
     ShopLoginPage,
     OrderDetailsPage,
     TrackOrderPage,
-    UserInbox
+    UserInbox,
+    
 };

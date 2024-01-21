@@ -41,7 +41,7 @@ const EventsPage = () => {
                  </span>
             </div>
         </Link>
-        <Link to="/products" className="inline-block ">
+        <Link to="/events" className="inline-block ">
             <div className={`${styles.button} mt-5 btn-ass transform-on-hover`}>
                  <span className="text-[#fff] font-[Poppins] text-[18px]">
                     ENROLL NOW
@@ -90,16 +90,18 @@ const EventsPage = () => {
     </section>
 
 
-    <div className='justify-center bg-white'>
-     <p class="elementor-heading-title elementor-size-default tex-center">Experience</p>               
-                <div class='row'>
-                <h2 class="ekit-heading--title elementskit-section-title  ">
-					The Best <span><span>Henna</span></span> in Town
-				   </h2>
+    <div className="container text-center">
+                   <h2 className="display-5 mt-5">FLEXIBLE CLASS SCHEDULE</h2>
+                    <h5> <SlCalender className='fs-6 mx-2 cal' />Weekdays - Day time classes</h5>   
+                    <h5> <SlCalender className='fs-6 mx-2 cal' />Weekdays – Evening Classes (for working ladies)</h5>   
+                    <h5> <SlCalender className='fs-6 mx-2 cal' />Weekend Classes</h5>                
+                <div className='row'>
                     <div className="col-sm-6 col-lg-4 d-flex align-items-center justify-content-center w-10 mx-auto mt-5">  
                     </div>            
-                </div>   
-     </div>
+                </div>                   
+  </div>
+
+
 
 
 
@@ -111,16 +113,7 @@ const EventsPage = () => {
      <p className='par-txt text-center'>CERTIFIED STUDENTS</p></div>
   </div> 
 
-  <div className="container text-center">
-                   <h2 className="display-5 mt-5">FLEXIBLE CLASS SCHEDULE</h2>
-                    <h5> <SlCalender className='fs-6 mx-2 cal' />Weekdays - Day time classes</h5>   
-                    <h5> <SlCalender className='fs-6 mx-2 cal' />Weekdays – Evening Classes (for working ladies)</h5>   
-                    <h5> <SlCalender className='fs-6 mx-2 cal' />Weekend Classes</h5>                
-                <div className='row'>
-                    <div className="col-sm-6 col-lg-4 d-flex align-items-center justify-content-center w-10 mx-auto mt-5">  
-                    </div>            
-                </div>                   
-  </div>
+
 
 
   <Footer />

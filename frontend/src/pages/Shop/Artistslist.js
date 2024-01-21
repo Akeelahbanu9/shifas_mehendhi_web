@@ -6,6 +6,8 @@ import {toast} from 'react-hot-toast'
 import axios from "axios";
 import { Table } from "antd";
 import moment from "moment";
+import DashboardHeader from "../../components/Shop/Layout/DashboardHeader";
+import DashboardSideBar from "../../components/Shop/Layout/DashboardSideBar";
 
 function ArtistsList() {
   const [artists, setArtists] = useState([]);
@@ -101,11 +103,21 @@ function ArtistsList() {
     },
   ];
   return (
-    <Layout>
-      <h1 className="page-header">Artists List</h1>
-      <hr />
-      <Table columns={columns} dataSource={artists} />
-    </Layout>
+    <div>
+    <DashboardHeader />
+    <div className="flex justify-between w-full">
+        <div className="w-[200px] 800px:w-[330px]">
+          <DashboardSideBar active={12} />
+        </div>
+        <div className="w-full justify-center  flex">
+        <h1 className="page-header">Artists List</h1>
+      <hr /><br/>
+       <Table columns={columns} dataSource={artists} />
+        </div>
+       </div>
+    </div>
+
+
   );
 }
 

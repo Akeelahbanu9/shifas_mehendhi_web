@@ -6,6 +6,13 @@ import { eventReducer } from "./reducers/event";
 import { cartReducer } from "./reducers/cart";
 import { wishlistReducer } from "./reducers/wishlist";
 import { orderReducer } from "./reducers/order";
+import { alertsSlice } from "./alertSlice";
+import { combineReducers } from "redux";
+
+const rootReducer = combineReducers({
+  alerts: alertsSlice.reducer,
+  
+});
 
 
 
@@ -18,6 +25,7 @@ const Store = configureStore({
     cart: cartReducer,
     wishlist: wishlistReducer,
     order: orderReducer,
+    reducer: rootReducer,
   },
 });
 

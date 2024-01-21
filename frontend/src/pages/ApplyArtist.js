@@ -1,6 +1,6 @@
 import { Button, Col, Form, Input, Row, TimePicker } from "antd";
 import React from "react";
-import Layout from "../components/Profile/ProfileSidebar.jsx";
+import ProfileSidebar from "../components/Profile/ProfileSidebar.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { showLoading, hideLoading } from "../redux/alertSlice.js";
 import { toast } from "react-hot-toast";
@@ -46,12 +46,12 @@ function ApplyArtist() {
   };
 
   return (
-    <Layout>
-      <h1 className="page-title">Apply to become an artist</h1>
+    <ProfileSidebar>
+     
       <hr />
 
       <ArtistForm onFinish={onFinish} />
-    </Layout>
+      </ProfileSidebar>
   );
 }
 

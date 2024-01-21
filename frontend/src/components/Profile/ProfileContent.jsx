@@ -23,6 +23,12 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { getAllOrdersOfUser } from "../../redux/actions/order";
+import ProfileSidebar from "./ProfileSidebar";
+import { Table } from "antd";
+import moment from "moment";
+import { showLoading, hideLoading } from "../../redux/alertSlice";
+import ArtistForm from "../ArtistForm";
+import { useNavigate } from "react-router-dom";
 
 const ProfileContent = ({ active }) => {
   const { user, error, successMessage } = useSelector((state) => state.user);
@@ -196,6 +202,25 @@ const ProfileContent = ({ active }) => {
           <Address />
         </div>
       )}
+
+             {/*  user Appointments */}
+             {active === 8 && (
+        <div>
+          
+          <Appointments /> 
+
+        </div>
+      )}
+
+       {/*  user Apply */}
+            {active === 9 && (
+        <div>
+          
+          <Applytobecomeanartist /> 
+
+        </div>
+      )}
+
     </div>
   );
 };
@@ -775,6 +800,125 @@ const Address = () => {
         </h5>
       )}
     </div>
+  );
+};
+
+
+
+const Appointments = () => {
+  const [appointments, setAppointments] = useState([]);
+  const dispatch = useDispatch();
+  const getAppointmentsData = async () => {
+    try {
+      dispatch(showLoading());
+      const resposne = await axios.get("/api/user/get-appointments-by-user-id", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      dispatch(hideLoading());
+      if (resposne.data.success) {
+        setAppointments(resposne.data.data);
+      }
+    } catch (error) {
+      dispatch(hideLoading());
+    }
+  };
+  const columns = [
+    {
+        title: "Id",
+        dataIndex: "_id",
+    },
+    {
+      title: "Artist",
+      dataIndex: "name",
+      render: (text, record) => (
+        <span>
+          {record.artistInfo.firstName} {record.artistInfo.lastName}
+        </span>
+      ),
+    },
+    {
+      title: "Phone",
+      dataIndex: "phoneNumber",
+      render: (text, record) => (
+        <span>
+          {record.artistInfo.phoneNumber} 
+        </span>
+      ),
+    },
+    {
+      title: "Date & Time",
+      dataIndex: "createdAt",
+      render: (text, record) => (
+        <span>
+          {moment(record.date).format("DD-MM-YYYY")} {moment(record.time).format("HH:mm")}
+        </span>
+      ),
+    },
+    
+  ];
+  useEffect(() => {
+    getAppointmentsData();
+  }, []);
+
+  return  (
+  
+  <div>
+  <h1 className="page-title">Appointments</h1>
+  <hr />
+  <Table columns={columns} dataSource={appointments} />
+</div>);
+};
+
+const Applytobecomeanartist =  () => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const onFinish = async (values) => {
+    try {
+      dispatch(showLoading());
+     const response = await axios.post(
+  `${server}/user/apply-artist-account`,
+  {
+    ...values,
+    userId: user._id,
+    timings: [
+      moment(values.timings[0]).format("HH:mm"),
+      moment(values.timings[1]).format("HH:mm"),
+    ],
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  }
+);
+;
+      dispatch(hideLoading());
+      if (response.data.success) {
+        toast.success(response.data.message);
+        navigate("/");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      dispatch(hideLoading());
+    
+      // Log the actual error for debugging
+      console.error("Error during form submission:", error);
+    
+      toast.error("Something went wrong");
+    }
+  };
+
+  return (
+    <div>
+      <h1 className="page-title">Apply Artist</h1>
+      <hr />
+
+      <ArtistForm onFinish={onFinish} />
+      </div>
   );
 };
 export default ProfileContent;

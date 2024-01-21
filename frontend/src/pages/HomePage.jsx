@@ -73,7 +73,7 @@ const HomePage = () => {
 <div className="row">
                 <div className="col-md-6 col-lg-4">
                     <div className="card border-3 transform-on-hover hovereffect">
-                    <Link to='/bookhenna'> <img src={img1} className="card-img-top" alt=""/></Link>
+                    <Link to='/BookAppointment'> <img src={img1} className="card-img-top" alt=""/></Link>
                         </div>
                 </div>
                 
@@ -85,7 +85,7 @@ const HomePage = () => {
                 
                 <div className="col-md-6 col-lg-4">
                     <div className="card border-3 transform-on-hover hovereffect">
-                    <Link to='/learnhenna'><img src={img3} className="card-img-top"alt=""/></Link>
+                    <Link to='/events'><img src={img3} className="card-img-top"alt=""/></Link>
                     </div>
                 </div>
             </div> 

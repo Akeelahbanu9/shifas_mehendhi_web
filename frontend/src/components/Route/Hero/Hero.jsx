@@ -29,14 +29,14 @@ const Hero = () => {
         <Link to="/products" className="inline-block ">
             <div className={`${styles.button} mt-5 btn-ass transform-on-hover`}>
                  <span className="text-[#fff] font-[Poppins] text-[18px]">
-                    SHOP HENNA
+                    LEARN HENNA
                  </span>
             </div>
         </Link>
         <Link to="/products" className="inline-block ">
             <div className={`${styles.button} mt-5 btn-ass transform-on-hover`}>
                  <span className="text-[#fff] font-[Poppins] text-[18px]">
-                    SHOP HENNA
+                    BOOK HENNA
                  </span>
             </div>
         </Link> </div>

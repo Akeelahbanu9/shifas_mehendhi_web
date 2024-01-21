@@ -110,11 +110,11 @@ function ArtistAppointments() {
     getAppointmentsData();
   }, []);
   return (
-    <Layout>
+    <div>
       <h1 className="page-header">Appointments</h1>
       <hr />
       <Table columns={columns} dataSource={appointments} />
-    </Layout>
+    </div>
   );
 }
 

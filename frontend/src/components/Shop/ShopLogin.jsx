@@ -115,13 +115,7 @@ const ShopLogin = () => {
                 </label>
               </div>
               <div className="text-sm">
-                <a
-                  href=".forgot-password"
-                  className="font-medium text-blue-600 hover:text-blue-500"
-                >
-                  Forgot your password?
-                </a>
-              </div>
+                             </div>
             </div>
             <div>
               <button
@@ -131,12 +125,7 @@ const ShopLogin = () => {
                 Submit
               </button>
             </div>
-         { /*     <div className={`${styles.noramlFlex} w-full`}>
-              <h4>Not have any account?</h4>
-              <Link to="/shop-create" className="text-blue-600 pl-2">
-                Sign Up
-              </Link>
-                </div> */}
+ 
           </form>
         </div>
       </div>

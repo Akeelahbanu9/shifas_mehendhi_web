@@ -11,7 +11,7 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const sendShopToken = require("../utils/shopToken");
 const User = require("../model/user");
 const Artist = require("../model/Artist");
-const authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware = require("../middleware/auth");
 
 
 // create shop
@@ -366,7 +366,7 @@ router.delete(
 
 
 
-router.get("/get-all-artists", isSeller, async (req, res) => {
+router.get("/get-all-artists", isAuthenticated, async (req, res) => {
   try {
     const artists = await Artist.find({});
     res.status(200).send({
@@ -404,7 +404,7 @@ router.get("/get-all-users", isAuthenticated, async (req, res) => {
 
 router.post(
   "/change-artist-account-status",
-  isAuthenticated,
+  authMiddleware,
   async (req, res) => {
     try {
       const { artistId, status } = req.body;
@@ -413,12 +413,7 @@ router.post(
       });
 
       const user = await User.findOne({ _id: artist.userId });
-      const unseenNotifications = user.unseenNotifications;
-      unseenNotifications.push({
-        type: "new-artist-request-changed",
-        message: `Your Artist account has been ${status}`,
-        onClickPath: "/notifications",
-      });
+
       user.isArtist = status === "approved" ? true : false;
       await user.save();
 

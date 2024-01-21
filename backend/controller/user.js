@@ -1,5 +1,8 @@
 const express = require("express");
+const { isAuthenticated, isAdmin } = require("../middleware/auth");
+const authMiddleware = require("../middleware/auth")
 const User = require("../model/user");
+const Artist = require("../model/Artist")
 const router = express.Router();
 const cloudinary = require("cloudinary");
 const ErrorHandler = require("../utils/ErrorHandler");
@@ -7,7 +10,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
-const { isAuthenticated, isAdmin } = require("../middleware/auth");
+
 
 // create user
 router.post("/create-user", async (req, res, next) => {
@@ -130,6 +133,29 @@ router.post(
   })
 );
 
+// log out user
+router.get(
+  "/logout",
+ 
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      // Expire the token cookie by setting the expires property to a past date
+      res.cookie("token", null, {
+        expires: new Date(0),
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+      });
+
+      // Respond with 204 No Content for a successful logout without a response body
+      res.status(204).end();
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+
 // load user
 router.get(
   "/getuser",
@@ -152,26 +178,7 @@ router.get(
   })
 );
 
-// log out user
-router.get(
-  "/logout",
-  catchAsyncErrors(async (req, res, next) => {
-    try {
-      res.cookie("token", null, {
-        expires: new Date(Date.now()),
-        httpOnly: true,
-        sameSite: "none",
-        secure: true,
-      });
-      res.status(201).json({
-        success: true,
-        message: "Log out successful!",
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  })
-);
+
 
 // update user info
 router.put(
@@ -413,5 +420,123 @@ router.delete(
     }
   })
 );
+
+router.post("/apply-artist-account", isAuthenticated, async (req, res) => {
+  try {
+    const newartist = new Artist({ ...req.body, status: "pending" });
+    await newartist.save();
+   // const adminUser = await User.findOne({ isAdmin: true });
+
+
+    const User = await User.findOne({ _id: Artist.userId });
+    res.status(200).send({
+      success: true,
+      message: "artist account applied successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Error applying artist account",
+      success: false,
+      error,
+    });
+  }
+});
+
+
+router.get("/get-all-approved-artists", authMiddleware, async (req, res) => {
+  try {
+    const artists = await Artist.find({ status: "approved" });
+    res.status(200).send({
+      message: "artist fetched successfully",
+      success: true,
+      data: artists,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Error applying artist account",
+      success: false,
+      error,
+    });
+  }
+});
+
+router.post("/book-appointment", authMiddleware, async (req, res) => {
+  try {
+    req.body.status = "pending";
+    req.body.date = moment(req.body.date, "DD-MM-YYYY").toISOString();
+    req.body.time = moment(req.body.time, "HH:mm").toISOString();
+    const newAppointment = new Appointment(req.body);
+    await newAppointment.save();
+    //pushing notification to doctor based on his userid
+    const user = await User.findOne({ _id: req.body.doctorInfo.userId });
+    
+    await user.save();
+    res.status(200).send({
+      message: "Appointment booked successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Error booking appointment",
+      success: false,
+      error,
+    });
+  }
+});
+
+router.post("/check-booking-avilability", authMiddleware, async (req, res) => {
+  try {
+    const date = moment(req.body.date, "DD-MM-YYYY").toISOString();
+    const fromTime = moment(req.body.time, "HH:mm")
+      .subtract(1, "hours")
+      .toISOString();
+    const toTime = moment(req.body.time, "HH:mm").add(1, "hours").toISOString();
+    const artistId = req.body.artistId;
+    const appointments = await Appointment.find({
+      artistId,
+      date,
+      time: { $gte: fromTime, $lte: toTime },
+    });
+    if (appointments.length > 0) {
+      return res.status(200).send({
+        message: "Appointments not available",
+        success: false,
+      });
+    } else {
+      return res.status(200).send({
+        message: "Appointments available",
+        success: true,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Error booking appointment",
+      success: false,
+      error,
+    });
+  }
+});
+
+router.get("/get-appointments-by-user-id", authMiddleware, async (req, res) => {
+  try {
+    const appointments = await Appointment.find({ userId: req.body.userId });
+    res.status(200).send({
+      message: "Appointments fetched successfully",
+      success: true,
+      data: appointments,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Error fetching appointments",
+      success: false,
+      error,
+    });
+  }
+});
 
 module.exports = router;

@@ -25,6 +25,7 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Layout from "../components/Layout";
+import Artist from "../components/Artist"
 
 
 
@@ -38,8 +39,10 @@ function BookAppointment() {
     const [artist, setArtist] = useState(null);
     const params = useParams();
     const dispatch = useDispatch();
+    const [artists, setArtists] = useState([]);
+    
   
-    const getDoctorData = async () => {
+    const getArtistData = async () => {
       try {
         dispatch(showLoading());
         const response = await axios.post(
@@ -123,13 +126,30 @@ function BookAppointment() {
         dispatch(hideLoading());
       }
     };
+
+    const AllApprovedDoctors = async () =>{
+
+      const getData = async () => {
+        try {
+          dispatch(showLoading())
+          const response = await axios.get("/api/v2/user/get-all-approved-artists", {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          });
+          dispatch(hideLoading())
+          if (response.data.success) {
+            setArtists(response.data.data);
+          }
+        } catch (error) {
+          dispatch(hideLoading())
+        }
+      };
   
-    useEffect(() => {
-      getDoctorData();
-    }, []);
-
-
-
+  useEffect(() => {
+    getData();
+  }, []);
+    }
 
   return (
     <>
@@ -193,7 +213,7 @@ function BookAppointment() {
                     <h1 className="mb-3">Watch the Experience</h1>                   
                 </div>  
                 <div className="embed-responsive embed-responsive-16by9">
-                <iframe className='ash'allowfullscreen frameborder="0" width="1000" height="515" src='https://www.youtube.com/embed/vlDzYIIOYmM'></iframe>
+                <iframe className="ash" width="1270" height="600" src="https://www.youtube.com/embed/V8R6aogIZz8?si=JhKEUbqv2c4l3Ory" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                                
                 <div className="d-flex align-items-center justify-content-center w-50 mx-auto mt-5 ">                       
                 <a href='#opening' ><button className='d-block btn bbb border-0 btn mx-4 btn-book-henna transform-on-hoverr text-white '>BOOKS SERVICES</button>  </a>
@@ -205,74 +225,21 @@ function BookAppointment() {
     </div>    
     <br></br><br></br>
     </section>
-    <Layout>
-      {artist && (
-        <div>
-          <h1 className="page-title">
-            {artist.firstName} {artist.lastName}
-          </h1>
-          <hr />
-          <Row gutter={20} className="mt-5" align="middle">
+   
+   
 
-            <Col span={8} sm={24} xs={24} lg={8}>
-              <img
-                src="https://thumbs.dreamstime.com/b/finger-press-book-now-button-booking-reservation-icon-online-149789867.jpg"
-                alt=""
-                width="100%"
-                height='400'
-              />
-            </Col>
-            <Col span={8} sm={24} xs={24} lg={8}>
-              <h1 className="normal-text">
-                <b>Timings :</b> {artist.timings[0]} - {artist.timings[1]}
-              </h1>
-              <p>
-                <b>Phone Number : </b>
-                {artist.phoneNumber}
-              </p>
-              <p>
-                <b>Address : </b>
-                {artist.address}
-              </p>
-              
-              <div className="d-flex flex-column pt-2 mt-2">
-                <DatePicker
-                  format="DD-MM-YYYY"
-                  onChange={(value) => {
-                    setDate(moment(value).format("DD-MM-YYYY"));
-                    setIsAvailable(false);
-                  }}
-                />
-                <TimePicker
-                  format="HH:mm"
-                  className="mt-3"
-                  onChange={(value) => {
-                    setIsAvailable(false);
-                    setTime(moment(value).format("HH:mm"));
-                  }}
-                />
-              {!isAvailable &&   <Button
-                  className="primary-button mt-3 full-width-button"
-                  onClick={checkAvailability}
-                >
-                  Check Availability
-                </Button>}
 
-                {isAvailable && (
-                  <Button
-                    className="primary-button mt-3 full-width-button"
-                    onClick={bookNow}
-                  >
-                    Book Now
-                  </Button>
-                )}
-              </div>
-            </Col>
-           
-          </Row>
-        </div>
-      )}
-    </Layout>
+
+
+    <div>
+    <Row gutter={20}>
+        {artists.map((artist) => (
+          <Col span={8} xs={24} sm={24} lg={8}>
+            <Artist artist={artist} />
+          </Col>
+        ))}
+      </Row>
+    </div>
 
     <section className="Henna Types">
     <div className="container">
@@ -300,4 +267,4 @@ function BookAppointment() {
   )
 }
 
-export default BookAppointment
+export default BookAppointment;

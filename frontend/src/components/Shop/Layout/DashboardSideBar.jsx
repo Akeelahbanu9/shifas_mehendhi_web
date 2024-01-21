@@ -193,7 +193,7 @@ const DashboardSideBar = ({ active }) => {
       </div>
 
       <div className="w-full flex items-center p-4">
-        <Link to="/settings" className="w-full flex items-center">
+        <Link to="/shop/Artistslist" className="w-full flex items-center">
           <CiSettings
             size={30}
             color={`${active === 12 ? "crimson" : "#555"}`}

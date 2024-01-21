@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Artist = require("../model/Artist");
-const authMiddleware = require("../middleware/authMiddleware");
+const authMiddleware = require("../middleware/auth");
 const Appointment = require("../model/appointmentModel");
 const User = require("../model/user");
 

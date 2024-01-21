@@ -57,9 +57,21 @@ function ArtistForm({ onFinish, initivalValues }) {
             rules={[{ required: true }]}
           >
 
+            <Input placeholder="Website" />
+          </Form.Item>
+        </Col>
+        <Col span={8} xs={24} sm={24} lg={8}>
+          <Form.Item
+            required
+            label="Address"
+            name="address"
+            rules={[{ required: true }]}
+          >
+
             <Input placeholder="Address" />
           </Form.Item>
         </Col>
+
       </Row>
       <hr />
       <h1 className="card-title mt-3">Professional Information</h1>
